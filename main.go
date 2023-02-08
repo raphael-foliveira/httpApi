@@ -14,10 +14,6 @@ import (
 	"github.com/raphael-foliveira/httpApi/models"
 )
 
-type Message struct {
-	Message string
-}
-
 const PORT = ":8000"
 const dsn = "postgresql://postgres:123@localhost/gotodo?sslmode=disable"
 
@@ -94,7 +90,7 @@ func main() {
 			jsonTodo, _ := json.Marshal(foundTodo)
 			w.Write(jsonTodo)
 		}
-		
+
 		if r.Method == http.MethodPut {
 			defer r.Body.Close()
 			bytes, err := io.ReadAll(r.Body)
