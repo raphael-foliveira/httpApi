@@ -28,7 +28,6 @@ func main() {
 	}
 
 	http.HandleFunc("/todos", func(w http.ResponseWriter, r *http.Request) {
-
 		if r.Method == http.MethodGet {
 			todos := controllers.GetTodos(db)
 			jsonTodos, err := json.Marshal(todos)
@@ -37,7 +36,6 @@ func main() {
 			}
 			w.Write(jsonTodos)
 			return
-
 		}
 
 		if r.Method == http.MethodPost {
@@ -58,6 +56,7 @@ func main() {
 				http.Error(w, "bad request", http.StatusBadRequest)
 				return
 			}
+
 			w.WriteHeader(http.StatusCreated)
 			controllers.CreateTodo(db, newTodo)
 			jsonResp, _ := json.Marshal(newTodo)
@@ -69,28 +68,33 @@ func main() {
 
 	http.HandleFunc("/todos/", func(w http.ResponseWriter, r *http.Request) {
 		splitUrl := strings.Split(r.URL.Path, "/")
+
 		fmt.Println(splitUrl)
 		if len(splitUrl) < 3 {
 			http.Error(w, "you must provide a todo id", http.StatusBadRequest)
 			return
 		}
+
 		todoId, err := strconv.Atoi(splitUrl[2])
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "todo id must be a number", http.StatusBadRequest)
 			return
 		}
+
 		if r.Method == http.MethodGet {
 			foundTodo := controllers.RetrieveTodo(db, todoId)
 			jsonTodo, _ := json.Marshal(foundTodo)
 			w.Write(jsonTodo)
 
 		}
+
 		if r.Method == http.MethodDelete {
 			foundTodo := controllers.DeleteTodo(db, todoId)
 			jsonTodo, _ := json.Marshal(foundTodo)
 			w.Write(jsonTodo)
 		}
+		
 		if r.Method == http.MethodPut {
 			defer r.Body.Close()
 			bytes, err := io.ReadAll(r.Body)
