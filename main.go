@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -34,6 +35,7 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	}
+	defer server.Shutdown(context.Background())
 
 	fmt.Println("About to listen on port", PORT)
 	server.ListenAndServe()
