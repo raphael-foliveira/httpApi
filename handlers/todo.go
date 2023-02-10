@@ -106,11 +106,13 @@ func (h *Handler) RetrieveTodo(todoId int) models.Todo {
 		title, description string
 		done               bool
 	)
+
 	err = rows.Scan(&id, &title, &description, &done)
 	if err != nil {
 		fmt.Println(err)
 		return models.Todo{}
 	}
+
 	return models.Todo{
 		Id:          id,
 		Title:       title,
