@@ -13,11 +13,11 @@ import (
 	"github.com/raphael-foliveira/httpApi/models"
 )
 
-type Handler struct {
+type Todo struct {
 	Db *sql.DB
 }
 
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *Todo) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	todoIdParam := strings.TrimPrefix(r.URL.Path, "/todos")
 	todoIdParam = strings.TrimPrefix(todoIdParam, "/")
 
@@ -95,7 +95,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *Handler) RetrieveTodo(todoId int) models.Todo {
+func (h *Todo) RetrieveTodo(todoId int) models.Todo {
 	rows, err := h.Db.Query("SELECT id, title, description, done FROM todos WHERE id = $1", todoId)
 	if err != nil {
 		return models.Todo{}
@@ -121,7 +121,7 @@ func (h *Handler) RetrieveTodo(todoId int) models.Todo {
 	}
 }
 
-func (h *Handler) DeleteTodo(todoId int) models.Todo {
+func (h *Todo) DeleteTodo(todoId int) models.Todo {
 	rows, err := h.Db.Query("DELETE FROM todos WHERE id = $1 RETURNING *", todoId)
 	if err != nil {
 		fmt.Println(err)
@@ -147,7 +147,7 @@ func (h *Handler) DeleteTodo(todoId int) models.Todo {
 
 }
 
-func (h *Handler) GetTodos() []models.Todo {
+func (h *Todo) GetTodos() []models.Todo {
 	todos := []models.Todo{}
 	rows, err := h.Db.Query("SELECT id, title, description, done FROM todos")
 	defer rows.Close()
@@ -178,7 +178,7 @@ func (h *Handler) GetTodos() []models.Todo {
 	return todos
 }
 
-func (h *Handler) CreateTodo(todoData models.Todo) (models.Todo, error) {
+func (h *Todo) CreateTodo(todoData models.Todo) (models.Todo, error) {
 	todoData.Done = false
 	rows, err := h.Db.Query("INSERT INTO todos (title, description, done) VALUES ($1, $2, $3) RETURNING id, title, description, done", todoData.Title, todoData.Description, todoData.Done)
 	if err != nil {
@@ -199,7 +199,7 @@ func (h *Handler) CreateTodo(todoData models.Todo) (models.Todo, error) {
 	}, nil
 }
 
-func (h *Handler) UpdateTodo(todo models.Todo, todoId int) (models.Todo, error) {
+func (h *Todo) UpdateTodo(todo models.Todo, todoId int) (models.Todo, error) {
 	if todoId != todo.Id {
 		return models.Todo{}, errors.New("cannot update todo because the object in body is different than the Id provided in the url")
 	}

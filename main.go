@@ -20,13 +20,13 @@ func main() {
 		panic(err)
 	}
 
-	handler := handlers.Handler{
+	todoHandler := handlers.Todo{
 		Db: db,
 	}
 
 	serveMux := http.NewServeMux()
 
-	serveMux.Handle("/todos/", &handler)
+	serveMux.Handle("/todos/", &todoHandler)
 
 	server := http.Server{
 		Addr:         ":8000",
