@@ -4,7 +4,7 @@ import "database/sql"
 
 const dsn = "postgresql://postgres:123@localhost/gotodo?sslmode=disable"
 
-func Start() *sql.DB {
+func Get() *sql.DB {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		panic(err)

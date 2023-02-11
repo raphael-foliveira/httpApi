@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	routes.Run(database.Start())
+	routes.Run(database.Get())
 }
