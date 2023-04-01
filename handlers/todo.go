@@ -96,18 +96,15 @@ func (h *Todo) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Todo) RetrieveTodo(todoId int) models.Todo {
-	rows, err := h.Db.Query("SELECT id, title, description, done FROM todos WHERE id = $1", todoId)
-	if err != nil {
-		return models.Todo{}
-	}
-	rows.Next()
+	row := h.Db.QueryRow("SELECT id, title, description, done FROM todos WHERE id = $1", todoId)
+
 	var (
 		id                 int
 		title, description string
 		done               bool
 	)
 
-	err = rows.Scan(&id, &title, &description, &done)
+	err := row.Scan(&id, &title, &description, &done)
 	if err != nil {
 		fmt.Println(err)
 		return models.Todo{}
@@ -122,18 +119,14 @@ func (h *Todo) RetrieveTodo(todoId int) models.Todo {
 }
 
 func (h *Todo) DeleteTodo(todoId int) models.Todo {
-	rows, err := h.Db.Query("DELETE FROM todos WHERE id = $1 RETURNING *", todoId)
-	if err != nil {
-		fmt.Println(err)
-		return models.Todo{}
-	}
-	rows.Next()
+	rows := h.Db.QueryRow("DELETE FROM todos WHERE id = $1 RETURNING *", todoId)
+
 	var (
 		id                 int
 		title, description string
 		done               bool
 	)
-	err = rows.Scan(&id, &title, &description, &done)
+	err := rows.Scan(&id, &title, &description, &done)
 	if err != nil {
 		fmt.Println(err)
 		return models.Todo{}
