@@ -1,0 +1,20 @@
+services:
+  database:
+    container_name: http_api_database
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: http_api
+  api:
+    container_name: http_api
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://postgres:123@database:5432/http_api?sslmode=disable
+    volumes:
+      - .:/app
+    command: air

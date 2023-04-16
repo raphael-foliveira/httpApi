@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"time"
@@ -12,14 +11,10 @@ import (
 
 const PORT = ":8000"
 
-func Run(db *sql.DB) {
-	todoHandler := handlers.Todo{
-		Db: db,
-	}
-
+func Run() {
 	serveMux := http.NewServeMux()
 
-	serveMux.Handle("/todos/", &todoHandler)
+	serveMux.Handle("/todos/", &handlers.Todo{})
 
 	server := http.Server{
 		Addr:         ":8000",
